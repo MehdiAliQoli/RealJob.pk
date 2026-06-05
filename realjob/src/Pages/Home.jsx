@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-// Mock Data matching all your required fields for instant preview and testing
+// Mock Data matching all required schema fields
 const MOCK_JOBS = [
   {
     id: "job-1",
@@ -68,30 +68,16 @@ function Home() {
   const [sortBy, setSortBy] = useState("latest");
   const [selectedJob, setSelectedJob] = useState(null);
 
-  // Corrected API Fetch Lifecycle
   useEffect(() => {
-    // Replace this mock assignment with your actual API endpoint logic when ready:
-    /*
-    fetch("/api/jobs")
-      .then((res) => res.json())
-      .then((data) => {
-         // Filter out inactive jobs right away if desired
-         const activeJobs = data.filter(job => job.is_active);
-         setJobs(activeJobs);
-         setFilteredJobs(activeJobs);
-      })
-      .catch((err) => console.error("Error fetching jobs:", err));
-    */
+    // API parsing lifecycle hook
     const activeJobs = MOCK_JOBS.filter((job) => job.is_active);
     setJobs(activeJobs);
     setFilteredJobs(activeJobs);
   }, []);
 
-  // Sync Search and Sort Filters whenever dependencies change
   useEffect(() => {
     let result = [...jobs];
 
-    // Apply Search Input Filter
     if (input.trim() !== "") {
       result = result.filter(
         (job) =>
@@ -101,7 +87,6 @@ function Home() {
       );
     }
 
-    // Apply Sorting Options
     if (sortBy === "latest") {
       result.sort((a, b) => new Date(b.posted_date) - new Date(a.posted_date));
     } else if (sortBy === "deadline") {
@@ -122,22 +107,22 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/50 pb-16 text-slate-800">
-      {/* Hero Section */}
-      <section className="bg-white border-b border-slate-200/60 py-12 lg:py-16">
+    <div className="min-h-screen bg-slate-50/60 pb-12 text-slate-800">
+      {/* Hero Header Section */}
+      <section className="bg-white border-b border-slate-200/60 py-10 md:py-16">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
             Find <span className="text-cyan-600">Real Jobs</span> in Pakistan
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-base text-slate-500 sm:text-lg md:mt-5 md:max-w-2xl md:text-xl">
-            Discover verified career openings across Government, Private, and Semi-Government sectors.
+          <p className="mx-auto mt-2 max-w-sm text-sm text-slate-500 sm:max-w-xl sm:text-base md:mt-4 md:max-w-2xl md:text-lg">
+            Your centralized portal for verified career opportunities spanning Government and Private sectors.
           </p>
 
-          {/* Search Bar & Filters Wrapper */}
-          <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-slate-200/80 bg-white p-3 shadow-lg shadow-slate-100/70 sm:flex sm:items-center sm:gap-3">
+          {/* Fully Responsive Fluid Search Bar System */}
+          <div className="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-2.5 shadow-md shadow-slate-100 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <div className="relative flex-1">
               <svg
-                className="absolute left-4 top-3.5 h-5 w-5 text-slate-400"
+                className="absolute left-3.5 top-3.5 h-5 w-5 text-slate-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -146,23 +131,23 @@ function Home() {
               </svg>
               <input
                 type="text"
-                placeholder="Job title, keywords, or location..."
+                placeholder="Search job keyword, title, or city..."
                 value={input}
                 onChange={handleChange}
-                className="w-full rounded-xl border-0 py-3 pl-12 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full h-12 rounded-xl border-0 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-slate-50/50 sm:bg-white"
               />
             </div>
 
-            <div className="mt-3 flex items-center gap-2 border-t border-slate-100 pt-3 sm:mt-0 sm:border-t-0 sm:pt-0">
+            <div className="flex items-center gap-2 w-full sm:w-auto border-t border-slate-100 pt-2 sm:border-t-0 sm:pt-0">
               <div className="relative flex-1 sm:flex-initial">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-10 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full h-12 appearance-none rounded-xl border border-slate-200 bg-white px-4 pr-10 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 >
-                  <option value="latest">Sort by: Latest Posted</option>
-                  <option value="deadline">Sort by: Deadline</option>
-                  <option value="title">Sort by: Alphabetical</option>
+                  <option value="latest">Sort: Latest</option>
+                  <option value="deadline">Sort: Deadline</option>
+                  <option value="title">Sort: Alphabetical</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,8 +158,9 @@ function Home() {
 
               {input && (
                 <button
+                  type="button"
                   onClick={handleSearchClear}
-                  className="rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-50"
+                  className="h-12 rounded-xl border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-500 hover:bg-slate-50 active:bg-slate-100"
                 >
                   Clear
                 </button>
@@ -184,35 +170,35 @@ function Home() {
         </div>
       </section>
 
-      {/* Main Jobs Listing Section */}
-      <main className="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-          <h2 className="text-lg font-bold text-slate-900">
-            Available Opportunities ({filteredJobs.length})
+      {/* Main Jobs Deck Section */}
+      <main className="mx-auto mt-8 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+          <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-500">
+            Active Posts ({filteredJobs.length})
           </h2>
         </div>
 
-        {/* Dynamic Grid Layout */}
+        {/* Responsive Grid System: Stacks perfectly on tiny viewports */}
         {filteredJobs.length === 0 ? (
-          <div className="mt-16 text-center">
+          <div className="mt-12 text-center px-4">
             <svg className="mx-auto h-12 w-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h3 className="mt-4 text-sm font-semibold text-slate-900">No jobs found</h3>
-            <p className="mt-1 text-sm text-slate-500">Try adjusting your keywords or filters.</p>
+            <h3 className="mt-4 text-sm font-semibold text-slate-900">No vacancies match your filter</h3>
+            <p className="mt-1 text-xs text-slate-500">Refine or clear your keywords to view alternative postings.</p>
           </div>
         ) : (
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredJobs.map((job) => (
               <div
                 key={job.id}
                 onClick={() => setSelectedJob(job)}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-md hover:shadow-cyan-100/40 cursor-pointer"
+                className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all active:scale-[0.99] sm:hover:-translate-y-0.5 sm:hover:border-cyan-300 sm:hover:shadow-md cursor-pointer"
               >
                 <div>
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center justify-between gap-2">
                     <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      className={`inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-bold tracking-wide uppercase ${
                         job.sector === "Government"
                           ? "bg-amber-50 text-amber-800 border border-amber-200"
                           : job.sector === "Semi-Government"
@@ -222,34 +208,36 @@ function Home() {
                     >
                       {job.sector}
                     </span>
-                    <span className="text-xs text-slate-400">Ref: {job.newspaper_source}</span>
+                    <span className="text-[11px] font-medium text-slate-400 truncate max-w-[120px]">
+                      {job.newspaper_source}
+                    </span>
                   </div>
 
-                  <h3 className="mt-4 text-lg font-bold text-slate-900 transition-colors group-hover:text-cyan-700">
+                  <h3 className="mt-3 text-base font-bold text-slate-900 group-hover:text-cyan-700 transition-colors line-clamp-2">
                     {job.title}
                   </h3>
-                  <p className="mt-1 text-sm font-medium text-slate-500">{job.organization}</p>
+                  <p className="mt-0.5 text-xs font-semibold text-slate-500 truncate">{job.organization}</p>
 
-                  <div className="mt-6 space-y-2.5 border-t border-slate-100 pt-4 text-xs font-medium text-slate-600">
+                  <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
-                      <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-4 w-4 flex-shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      {job.location}
+                      <span className="truncate">{job.location}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-4 w-4 flex-shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <span className="text-rose-600 font-semibold">Deadline: {job.deadline}</span>
+                      <span>Deadline: <strong className="text-rose-600 font-bold">{job.deadline}</strong></span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-center justify-end text-xs font-bold text-cyan-600 group-hover:text-cyan-700">
-                  <span>View Full Details</span>
-                  <svg className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="mt-4 flex items-center justify-end text-xs font-bold text-cyan-600 group-hover:text-cyan-700 pt-2 border-t border-slate-50">
+                  <span>Details</span>
+                  <svg className="ml-0.5 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -259,118 +247,123 @@ function Home() {
         )}
       </main>
 
-      {/* Detailed Modal Overlay on Card Click */}
+      {/* Adaptive Bottom-Sheet Drawer (Mobile) & Modal Overlay (Desktop) */}
       {selectedJob && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm p-0 sm:p-4 transition-opacity">
+          <div className="relative w-full max-w-2xl bg-white shadow-2xl rounded-t-2xl sm:rounded-2xl max-h-[92vh] sm:max-h-[85vh] overflow-y-auto flex flex-col">
             
-            {/* Modal Header */}
-            <div className="flex items-start justify-between border-b border-slate-100 pb-4">
-              <div>
-                <span className="inline-flex items-center rounded-full bg-cyan-50 border border-cyan-200 px-3 py-0.5 text-xs font-semibold text-cyan-800">
-                  {selectedJob.sector} Sector
-                </span>
-                <h2 className="mt-2 text-xl font-extrabold text-slate-900 sm:text-2xl">{selectedJob.title}</h2>
-                <p className="text-base font-semibold text-slate-500">{selectedJob.organization}</p>
-              </div>
+            {/* Stick Close Control Button (Top-Right Panel) */}
+            <div className="absolute right-4 top-4 z-10">
               <button
+                type="button"
                 onClick={() => setSelectedJob(null)}
-                className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 focus:outline-none"
+                className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200 active:bg-slate-300 focus:outline-none"
               >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* Modal Body Info Columns */}
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Job Specifications</h4>
-                <div className="divide-y divide-slate-100 rounded-2xl border border-slate-100 bg-slate-50/50 px-4 text-sm">
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Location:</span>
-                    <span className="font-semibold text-slate-900">{selectedJob.location}</span>
+            {/* Modal Inside Container */}
+            <div className="p-5 sm:p-8 overflow-y-auto">
+              <div>
+                <span className="inline-flex items-center rounded bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 text-xs font-bold text-cyan-800 uppercase tracking-wide">
+                  {selectedJob.sector} Sector
+                </span>
+                <h2 className="mt-2 text-lg font-black text-slate-900 pr-8 sm:text-2xl">{selectedJob.title}</h2>
+                <p className="text-xs sm:text-sm font-bold text-slate-500 mt-0.5">{selectedJob.organization}</p>
+              </div>
+
+              {/* Specifications Block - Changes layout based on viewport width */}
+              <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Position Profile</h4>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 space-y-2 text-xs">
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">City / Location:</span>
+                      <span className="font-bold text-slate-900 text-right">{selectedJob.location}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Education Requirement:</span>
+                      <span className="font-bold text-slate-900 text-right">{selectedJob.qualification}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Vacancies Available:</span>
+                      <span className="font-bold text-slate-900">{selectedJob.positions_available}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Gender Limit:</span>
+                      <span className="font-bold text-slate-900">{selectedJob.gender}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Age Range:</span>
+                      <span className="font-bold text-slate-900">{selectedJob.age_limit}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Education:</span>
-                    <span className="font-semibold text-slate-900 text-right">{selectedJob.qualification}</span>
-                  </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Vacancies:</span>
-                    <span className="font-semibold text-slate-900">{selectedJob.positions_available} Position(s)</span>
-                  </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Gender Limit:</span>
-                    <span className="font-semibold text-slate-900">{selectedJob.gender}</span>
-                  </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Age Bracket:</span>
-                    <span className="font-semibold text-slate-900">{selectedJob.age_limit}</span>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Tracking & Logistics</h4>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 space-y-2 text-xs">
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Newspaper Source:</span>
+                      <span className="font-bold text-slate-900 text-right">{selectedJob.newspaper_source}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Publication Date:</span>
+                      <span className="font-bold text-slate-900">{selectedJob.publication_date}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">System Uploaded:</span>
+                      <span className="font-bold text-slate-900">{selectedJob.posted_date}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Apply Protocol:</span>
+                      <span className="font-bold text-cyan-700">{selectedJob.apply_method}</span>
+                    </div>
+                    <div className="flex justify-between gap-2 py-0.5">
+                      <span className="text-slate-500">Closing Date:</span>
+                      <span className="font-black text-rose-600">{selectedJob.deadline}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Media & Verification</h4>
-                <div className="divide-y divide-slate-100 rounded-2xl border border-slate-100 bg-slate-50/50 px-4 text-sm">
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Newspaper Source:</span>
-                    <span className="font-semibold text-slate-900">{selectedJob.newspaper_source}</span>
-                  </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Publication Date:</span>
-                    <span className="font-semibold text-slate-900">{selectedJob.publication_date}</span>
-                  </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">System Uploaded:</span>
-                    <span className="font-semibold text-slate-900">{selectedJob.posted_date}</span>
-                  </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Application Method:</span>
-                    <span className="font-semibold text-cyan-700">{selectedJob.apply_method}</span>
-                  </div>
-                  <div className="flex justify-between py-2.5">
-                    <span className="text-slate-500">Deadline:</span>
-                    <span className="font-bold text-rose-600">{selectedJob.deadline}</span>
+              {/* Advertisement Snapshot */}
+              {selectedJob.image_url && (
+                <div className="mt-5">
+                  <h4 className="mb-1.5 text-[11px] font-black uppercase tracking-widest text-slate-400">Official Ad Scan</h4>
+                  <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                    <img
+                      src={selectedJob.image_url}
+                      alt="Job advertisement viewport clipped frame"
+                      className="w-full h-auto max-h-60 sm:max-h-72 object-cover object-top"
+                    />
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
-            {/* Job Advertisement Image Preview (Supabase Storage placeholder implementation) */}
-            {selectedJob.image_url && (
-              <div className="mt-6">
-                <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Advertisement Clip</h4>
-                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
-                  <img
-                    src={selectedJob.image_url}
-                    alt={`${selectedJob.title} Advertisement Graphic`}
-                    className="w-full h-48 object-cover object-center transition-transform duration-300 hover:scale-[1.02]"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Action Footer Button */}
-            <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-4">
-              <span className="text-xs text-slate-400 font-mono">ID: {selectedJob.id}</span>
-              <div className="flex gap-3">
+            {/* Modal Responsive Sticky Action Bar */}
+            <div className="border-t border-slate-100 bg-slate-50 px-5 py-4 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between rounded-b-2xl">
+              <span className="text-[10px] font-mono text-slate-400 text-center sm:text-left">System ID: {selectedJob.id}</span>
+              <div className="flex flex-col gap-2 w-full sm:flex-row sm:w-auto">
                 <button
                   type="button"
                   onClick={() => setSelectedJob(null)}
-                  className="rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  className="w-full sm:w-auto h-11 px-5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 transition-colors active:bg-slate-50"
                 >
-                  Close
+                  Dismiss
                 </button>
                 {selectedJob.apply_link && (
                   <a
                     href={selectedJob.apply_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-cyan-700"
+                    className="w-full sm:w-auto h-11 px-5 rounded-xl bg-slate-900 text-xs font-bold text-white transition-all flex items-center justify-center hover:bg-cyan-700 active:scale-[0.98]"
                   >
-                    Apply Official Link
+                    Apply on Official Website
                   </a>
                 )}
               </div>
